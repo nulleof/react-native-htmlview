@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, } from 'react-native';
 
 import { Parser, DomHandler } from 'htmlparser2';
 
@@ -49,6 +49,7 @@ const htmlToElement = (rawHtml, opts, done) => {
           if (name === 'p'
             || name === 'pre'
             || name === 'div'
+            || name === 'img'
             || name === 'br'
             || name === 'h1'
             || name === 'h2'
@@ -118,6 +119,27 @@ const htmlToElement = (rawHtml, opts, done) => {
         }
 
         node.style = style;
+
+        if (node.name === 'img'
+          && node.attribs.src
+          && node.attribs.alt) {
+          imagePressHandler = () => opts.imageLinkHandler(node.attribs.alt);
+
+          return (
+            <Text key={index}
+              onPress={imagePressHandler}
+              style={[
+                null,
+                opts.styles.default,
+                (parent && parent.name) ? opts.styles[parent.name] : null,
+                (parent && parent.style) ? StyleSheet.create({ style: parent.style }).style : null,
+                opts.imageLinkStyle ? StyleSheet.create({ style: opts.imageLinkStyle }).style : null,
+              ]}
+            >
+              {node.attribs.alt}
+            </Text>
+          );
+        }
 
         return (
           <Text key={index} onPress={linkPressHandler}>

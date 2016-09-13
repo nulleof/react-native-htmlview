@@ -26,12 +26,15 @@ class HTMLView extends Component {
     value: PropTypes.string,
     stylesheet: PropTypes.object,
     onLinkPress: PropTypes.func,
+    imageLinkStyle: PropTypes.object,
+    onImageLinkPress: PropTypes.func,
     onError: PropTypes.func,
     renderNode: PropTypes.func,
   };
 
   static defaultProps = {
     onLinkPress: url => Linking.openURL(url),
+    onImageLinkPress: () => {},
     onError: () => {},
   };
 
@@ -66,6 +69,8 @@ class HTMLView extends Component {
 
     const opts = {
       linkHandler: this.props.onLinkPress,
+      imageLinkHandler: this.props.onImageLinkPress,
+      imageLinkStyle: this.props.imageLinkStyle,
       styles: Object.assign({}, baseStyles, this.props.stylesheet),
       customRenderer: this.props.renderNode,
     };
