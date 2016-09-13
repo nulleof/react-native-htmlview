@@ -28,19 +28,8 @@ const htmlToElement = (rawHtml, opts, done) => {
       if (node.type === 'text') {
         let data = node.data;
 
-        if (parent) {
-          const name = parent.name;
-          if (name === 'p'
-            || name === 'pre'
-            || name === 'a'
-            || name === 'div'
-            || name === 'h1'
-            || name === 'h2'
-            || name === 'h3'
-            || name === 'h4'
-            || name === 'h5') {
-            data = ltrim(data);
-          }
+        if (index === 0 && list.length !== 1) {
+          data = ltrim(data);
         }
 
         if (node.prev && node.prev.type === 'tag') {
