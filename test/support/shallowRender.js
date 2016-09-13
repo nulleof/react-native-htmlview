@@ -1,10 +1,10 @@
-var TestUtils = require('react-addons-test-utils')
+import TestUtils from 'react-addons-test-utils';
 
-function shallowRender(element) {
-  var shallowRenderer = TestUtils.createRenderer()
+shallowRender = (element) => {
+  var shallowRenderer = TestUtils.createRenderer();
 
-  shallowRenderer.render(element)
+  shallowRenderer.render(element);
   return shallowRenderer
-}
+};
 
-module.exports = shallowRender
+module.exports = shallowRender;

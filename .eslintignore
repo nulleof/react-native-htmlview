@@ -1,2 +1,4 @@
-vendor
 node_modules
+test
+__mocks__
+__tests__
