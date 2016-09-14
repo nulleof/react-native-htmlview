@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View, InteractionManager } from 'react-native';
 import htmlToElement from './htmlToElement';
 
 const boldStyle = { fontWeight: '500' };
@@ -41,14 +41,21 @@ class HTMLView extends Component {
   constructor(props) {
     super(props);
 
+    this.element = null;
+
     this.state = {
-      element: null,
+      loading: true,
     };
   }
 
   componentDidMount() {
-    this.mounted = true;
     this.startHtmlRender(this.props.value);
+
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        loading: false,
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,12 +65,14 @@ class HTMLView extends Component {
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.setState({
+      loading: false,
+    });
   }
 
   startHtmlRender(value) {
     if (!value) {
-      this.setState({ element: null });
+      this.element = null;
       return;
     }
 
@@ -81,17 +90,16 @@ class HTMLView extends Component {
         return;
       }
 
-      if (this.mounted) {
-        this.setState({ element });
-      }
+      this.element = element;
     });
   }
 
   render() {
-    if (this.state.element) {
-      return <View style={this.props.style} children={this.state.element} />;
+    if (this.state.loading || !this.element) {
+      return <View />;
     }
-    return <View />;
+
+    return <View style={this.props.style} children={this.element} />;
   }
 }
 
