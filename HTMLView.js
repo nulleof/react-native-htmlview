@@ -89,7 +89,7 @@ class HTMLView extends Component {
 
   render() {
     if (this.state.element) {
-      return <View children={this.state.element} />;
+      return <View style={this.props.style} children={this.state.element} />;
     }
     return <View />;
   }
