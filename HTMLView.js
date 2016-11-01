@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Linking, StyleSheet, View, InteractionManager } from 'react-native';
+import { Linking, StyleSheet, View, InteractionManager, Text } from 'react-native';
 import htmlToElement from './htmlToElement';
 
 const boldStyle = { fontWeight: '500' };
@@ -99,7 +99,7 @@ class HTMLView extends Component {
       return <View />;
     }
 
-    return <View style={this.props.style} children={this.element} />;
+    return <Text style={this.props.style} children={this.element} />;
   }
 }
 
