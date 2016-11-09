@@ -24,7 +24,8 @@
     "buffer": "^4.9.1",
     "events": "^1.1.1",
     "htmlparser2": "^3.9.1",
-    "stream": "0.0.2"
+    "stream": "0.0.2",
+    "string_decoder": "^0.10.31"
   },
   "devDependencies": {
     "babel-jest": "^10.0.2",
@@ -41,7 +42,7 @@
     "jest-cli": "^0.10.0",
     "react-addons-test-utils": "^0.14.5",
     "react": "^15.3.1",
-    "react-native": "^0.33.0"
+    "react-native": "^0.36.0"
   },
   "author": "James Friend <james@jsdf.co> (http://jsdf.co/)",
   "license": "ISC",
