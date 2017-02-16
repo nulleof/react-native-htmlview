@@ -26,10 +26,19 @@ class HTMLView extends Component {
     value: PropTypes.string,
     stylesheet: PropTypes.object,
     onLinkPress: PropTypes.func,
-    imageLinkStyle: PropTypes.object,
-    onImageLinkPress: PropTypes.func,
     onError: PropTypes.func,
     renderNode: PropTypes.func,
+    viewportWidth: PropTypes.number,
+    style: Text.propTypes.style,
+  };
+
+  static defaultProps = {
+    value: '',
+    stylesheet: null,
+    imageLinkStyle: null,
+    renderNode: null,
+    viewportWidth: null,
+    style: null,
   };
 
   static defaultProps = {
@@ -78,10 +87,9 @@ class HTMLView extends Component {
 
     const opts = {
       linkHandler: this.props.onLinkPress,
-      imageLinkHandler: this.props.onImageLinkPress,
-      imageLinkStyle: this.props.imageLinkStyle,
       styles: Object.assign({}, baseStyles, this.props.stylesheet),
       customRenderer: this.props.renderNode,
+      viewportWidth: this.props.viewportWidth,
     };
 
     htmlToElement(value, opts, (err, element) => {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet, } from 'react-native';
-
-import { Parser, DomHandler } from 'htmlparser2';
+import { Text, StyleSheet, Image } from 'react-native';
+import htmlparser from 'htmlparser2-without-node-native';
+import entities from 'entities';
 
 const LINE_BREAK = '\n';
 const PARAGRAPH_BREAK = '\n\n';
@@ -44,6 +44,7 @@ const htmlToElement = (rawHtml, opts, done) => {
             || name === 'h2'
             || name === 'h3'
             || name === 'h4'
+            || name === 'img'
             || name === 'h5') {
             data = ltrim(data);
           }
@@ -59,7 +60,7 @@ const htmlToElement = (rawHtml, opts, done) => {
               (parent && parent.style) ? StyleSheet.create({ style: parent.style }).style : null,
             ]}
           >
-            {data}
+            {entities.decodeHTML(data)}
           </Text>
         );
       }
@@ -109,24 +110,35 @@ const htmlToElement = (rawHtml, opts, done) => {
 
         node.style = style;
 
-        if (node.name === 'img'
-          && node.attribs.src
-          && node.attribs.alt) {
-          imagePressHandler = () => opts.imageLinkHandler(node.attribs.alt);
+        if (opts.viewportWidth && node.name === 'img'
+          && node.attribs.src && node.attribs.width && node.attribs.height) {
+          let finalWidth = node.attribs.width;
+          let finalHeight = node.attribs.height;
+
+          if (finalHeight <= 0 || finalWidth <= 0) {
+            return null;
+          }
+
+          if (finalWidth !== opts.viewportWidth) {
+            finalWidth = opts.viewportWidth;
+            finalHeight *= finalWidth / node.attribs.width;
+          }
 
           return (
-            <Text key={index}
-              onPress={imagePressHandler}
-              style={[
-                null,
-                opts.styles.default,
-                (parent && parent.name) ? opts.styles[parent.name] : null,
-                (parent && parent.style) ? StyleSheet.create({ style: parent.style }).style : null,
-                opts.imageLinkStyle ? StyleSheet.create({ style: opts.imageLinkStyle }).style : null,
-              ]}
-            >
-              {node.attribs.alt}
-            </Text>
+            <Image
+              key={index}
+              style={{
+                backgroundColor: 'transparent',
+                width: finalWidth,
+                height: finalHeight,
+                flex: 1,
+              }}
+              source={{
+                uri: node.attribs.src,
+                width: finalWidth,
+                height: finalHeight,
+              }}
+            />
           );
         }
 
@@ -147,13 +159,13 @@ const htmlToElement = (rawHtml, opts, done) => {
     });
   };
 
-  const handler = new DomHandler((err, dom) => {
+  const handler = new htmlparser.DomHandler((err, dom) => {
     if (err) {
       done(err);
     }
     done(null, domToElement(dom));
   });
-  const parser = new Parser(handler, { decodeEntities: true });
+  const parser = new htmlparser.Parser(handler);
   parser.write(rawHtml);
   parser.done();
 };
