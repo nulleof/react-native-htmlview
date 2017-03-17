@@ -30,6 +30,8 @@ class HTMLView extends Component {
     renderNode: PropTypes.func,
     viewportWidth: PropTypes.number,
     style: Text.propTypes.style,
+    imageLinkStyle: Text.propTypes.style,
+    onImageLinkPress: PropTypes.func,
   };
 
   static defaultProps = {
@@ -39,9 +41,6 @@ class HTMLView extends Component {
     renderNode: null,
     viewportWidth: null,
     style: null,
-  };
-
-  static defaultProps = {
     onLinkPress: url => Linking.openURL(url),
     onImageLinkPress: () => {},
     onError: () => {},
@@ -90,6 +89,8 @@ class HTMLView extends Component {
       styles: Object.assign({}, baseStyles, this.props.stylesheet),
       customRenderer: this.props.renderNode,
       viewportWidth: this.props.viewportWidth,
+      imageLinkHandler: this.props.onImageLinkPress,
+      imageLinkStyle: this.props.imageLinkStyle,
     };
 
     htmlToElement(value, opts, (err, element) => {

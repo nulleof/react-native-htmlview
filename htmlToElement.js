@@ -110,35 +110,57 @@ const htmlToElement = (rawHtml, opts, done) => {
 
         node.style = style;
 
+        /*
+         if (opts.viewportWidth && node.name === 'img'
+         && node.attribs.src && node.attribs.width && node.attribs.height) {
+         let finalWidth = node.attribs.width;
+         let finalHeight = node.attribs.height;
+
+         if (finalHeight <= 0 || finalWidth <= 0) {
+         return null;
+         }
+
+         if (finalWidth !== opts.viewportWidth) {
+         finalWidth = opts.viewportWidth;
+         finalHeight *= finalWidth / node.attribs.width;
+         }
+
+         return (
+         <Image
+         key={index}
+         style={{
+         backgroundColor: 'transparent',
+         width: finalWidth,
+         height: finalHeight,
+         flex: 1,
+         }}
+         source={{
+         uri: node.attribs.src,
+         width: finalWidth,
+         height: finalHeight,
+         }}
+         />
+         );
+         }
+         */
+
         if (opts.viewportWidth && node.name === 'img'
-          && node.attribs.src && node.attribs.width && node.attribs.height) {
-          let finalWidth = node.attribs.width;
-          let finalHeight = node.attribs.height;
-
-          if (finalHeight <= 0 || finalWidth <= 0) {
-            return null;
-          }
-
-          if (finalWidth !== opts.viewportWidth) {
-            finalWidth = opts.viewportWidth;
-            finalHeight *= finalWidth / node.attribs.width;
-          }
+          && node.attribs.src && node.attribs.alt && node.attribs.num) {
+          const imagePressHandler = () => opts.imageLinkHandler(node.attribs.num);
 
           return (
-            <Image
-              key={index}
-              style={{
-                backgroundColor: 'transparent',
-                width: finalWidth,
-                height: finalHeight,
-                flex: 1,
-              }}
-              source={{
-                uri: node.attribs.src,
-                width: finalWidth,
-                height: finalHeight,
-              }}
-            />
+            <Text key={index}
+                  onPress={imagePressHandler}
+                  style={[
+                    null,
+                    opts.styles.default,
+                    (parent && parent.name) ? opts.styles[parent.name] : null,
+                    (parent && parent.style) ? StyleSheet.create({ style: parent.style }).style : null,
+                    opts.imageLinkStyle,
+                  ]}
+            >
+              {node.attribs.alt}
+            </Text>
           );
         }
 
